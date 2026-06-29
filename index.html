@@ -6,192 +6,323 @@
     <title>EthioP2P</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #000; color: #fff; min-height: 100vh; }
 
-        body {
-            background: #0f0f1a;
-            color: #ffffff;
-            min-height: 100vh;
+        /* TOP BAR */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #000;
+            border-bottom: 1px solid #111;
         }
-
-        .header {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #2a2a4a;
-        }
-
-        .logo {
-            font-size: 28px;
+        .topbar-title {
+            font-size: 18px;
             font-weight: bold;
-            color: #00d4ff;
+        }
+        .topbar-icon {
+            font-size: 20px;
+            cursor: pointer;
         }
 
-        .tagline {
+        /* BUY SELL TOGGLE */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #000;
+        }
+        .toggle-btns {
+            display: flex;
+            background: #111;
+            border-radius: 20px;
+            padding: 3px;
+        }
+        .toggle-btn {
+            padding: 6px 20px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            background: transparent;
+            color: #888;
+        }
+        .toggle-btn.active {
+            background: #fff;
+            color: #000;
+        }
+        .currency-select {
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* FILTERS */
+        .filters {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            gap: 8px;
+            border-bottom: 1px solid #111;
+            overflow-x: auto;
+        }
+        .filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .filter-icon { font-size: 16px; }
+
+        /* MERCHANT CARD */
+        .merchant-card {
+            padding: 16px;
+            border-bottom: 1px solid #111;
+        }
+        .merchant-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .merchant-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            position: relative;
+        }
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: #00ff88;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border: 2px solid #000;
+        }
+        .merchant-info { flex: 1; }
+        .merchant-name {
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .merchant-badge {
+            background: #f0b90b;
+            color: #000;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        .merchant-stats {
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+        }
+        .merchant-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .merchant-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .merchant-price span {
+            font-size: 14px;
+            color: #888;
+        }
+        .merchant-details {
             font-size: 12px;
             color: #888;
             margin-top: 4px;
         }
-
-        .balance-card {
-            background: linear-gradient(135deg, #00d4ff22, #0066ff22);
-            border: 1px solid #00d4ff44;
-            border-radius: 16px;
-            padding: 20px;
-            margin: 16px;
-            text-align: center;
-        }
-
-        .balance-label {
-            font-size: 12px;
+        .merchant-details b { color: #fff; }
+        .merchant-timer {
+            font-size: 11px;
             color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
         }
-
-        .balance-amount {
-            font-size: 36px;
-            font-weight: bold;
-            color: #00d4ff;
-            margin: 8px 0;
+        .payment-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 8px;
         }
-
-        .balance-sub {
-            font-size: 12px;
-            color: #666;
+        .payment-tag {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-left: 3px solid;
+            background: #111;
         }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 0 16px;
-        }
-
-        .action-btn {
-            padding: 16px;
-            border-radius: 12px;
+        .buy-action-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
             border: none;
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
+            min-width: 90px;
+        }
+        .buy-action-btn.buy { background: #00d4a3; color: #000; }
+        .buy-action-btn.sell { background: #f0b90b; color: #000; }
+        .buy-action-btn.disabled { background: #222; color: #666; }
+
+        /* ORDERS PAGE */
+        .tab-row {
+            display: flex;
+            padding: 0 16px;
+            border-bottom: 1px solid #222;
+            gap: 20px;
+        }
+        .tab {
+            padding: 12px 0;
+            font-size: 14px;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            color: #fff;
+            border-bottom: 2px solid #f0b90b;
+            font-weight: bold;
+        }
+        .subtab-row {
+            display: flex;
+            padding: 8px 16px;
+            gap: 16px;
+            border-bottom: 1px solid #111;
+            align-items: center;
+        }
+        .subtab {
+            font-size: 13px;
+            color: #888;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+        .subtab.active {
+            color: #fff;
+            border-bottom: 2px solid #f0b90b;
+        }
+        .subtab-filter {
+            margin-left: auto;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .empty-state {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            padding: 80px 20px;
+            color: #444;
         }
+        .empty-icon { font-size: 48px; margin-bottom: 16px; }
+        .empty-text { font-size: 14px; }
 
-        .btn-deposit {
-            background: linear-gradient(135deg, #00d4ff, #0066ff);
-            color: white;
+        /* ACCOUNT PAGE */
+        .account-header {
+            padding: 20px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid #111;
         }
-
-        .btn-withdraw {
-            background: linear-gradient(135deg, #1a1a2e, #2a2a4a);
-            color: #00d4ff;
-            border: 1px solid #00d4ff44;
-        }
-
-        .btn-buy {
-            background: linear-gradient(135deg, #00ff88, #00cc66);
-            color: #0f0f1a;
-        }
-
-        .btn-sell {
-            background: linear-gradient(135deg, #ff4444, #cc0000);
-            color: white;
-        }
-
-        .action-btn .icon {
+        .account-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #1652f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 24px;
         }
-
-        .section-title {
+        .account-name {
             font-size: 16px;
             font-weight: bold;
-            color: #fff;
-            margin: 20px 16px 12px;
         }
-
-        .order-card {
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            border-radius: 12px;
+        .account-email {
+            font-size: 13px;
+            color: #888;
+            margin-top: 2px;
+        }
+        .account-badges {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .badge {
+            font-size: 11px;
+            color: #00d4a3;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .account-stats {
             padding: 16px;
-            margin: 0 16px 12px;
+            border-bottom: 1px solid #111;
         }
-
-        .order-header {
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #111;
+            font-size: 14px;
+        }
+        .stat-row:last-child { border-bottom: none; }
+        .stat-label { color: #888; }
+        .stat-value { color: #fff; font-weight: bold; }
+        .account-menu {
+            padding: 0 16px;
+        }
+        .menu-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .order-id {
-            font-size: 12px;
-            color: #888;
-        }
-
-        .order-status {
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 20px;
-            background: #00ff8822;
-            color: #00ff88;
-        }
-
-        .order-amount {
-            font-size: 20px;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .order-details {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-        }
-
-        .order-detail {
-            font-size: 12px;
-            color: #888;
-        }
-
-        .order-detail span {
-            color: #00d4ff;
-        }
-
-        .buy-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #00ff88, #00cc66);
-            color: #0f0f1a;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
+            padding: 16px 0;
+            border-bottom: 1px solid #111;
             cursor: pointer;
-            margin-top: 12px;
         }
+        .menu-label { font-size: 14px; color: #fff; }
+        .menu-value { font-size: 13px; color: #888; display: flex; align-items: center; gap: 4px; }
 
+        /* NAV BAR */
         .nav-bar {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #1a1a2e;
-            border-top: 1px solid #2a2a4a;
+            bottom: 0; left: 0; right: 0;
+            background: #000;
+            border-top: 1px solid #222;
             display: flex;
             justify-content: space-around;
-            padding: 12px 0;
+            padding: 10px 0;
         }
-
         .nav-item {
             display: flex;
             flex-direction: column;
@@ -199,192 +330,208 @@
             gap: 4px;
             cursor: pointer;
             color: #888;
-            font-size: 10px;
-        }
-
-        .nav-item.active {
-            color: #00d4ff;
-        }
-
-        .nav-icon {
-            font-size: 20px;
-        }
-
-        .content {
-            padding-bottom: 80px;
-        }
-
-        .stats-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-            margin: 0 16px 16px;
-        }
-
-        .stat-card {
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 18px;
-            font-weight: bold;
-            color: #00d4ff;
-        }
-
-        .stat-label {
-            font-size: 10px;
-            color: #888;
-            margin-top: 4px;
-        }
-
-        .price-ticker {
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            border-radius: 12px;
-            padding: 16px;
-            margin: 0 16px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .price-pair {
-            font-size: 14px;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .price-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: #00ff88;
-        }
-
-        .price-change {
             font-size: 11px;
-            color: #00ff88;
         }
+        .nav-item.active { color: #1652f0; }
+        .nav-icon { font-size: 22px; }
 
-        .page {
-            display: none;
-        }
+        .content { padding-bottom: 70px; }
+        .page { display: none; }
+        .page.active { display: block; }
 
-        .page.active {
-            display: block;
+        /* CREATE ORDER FORM */
+        .form-section {
+            padding: 16px;
         }
+        .form-group { margin-bottom: 16px; }
+        .form-label { font-size: 12px; color: #888; margin-bottom: 6px; display: block; }
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+        }
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .submit-btn.green { background: #00d4a3; color: #000; }
+        .submit-btn.yellow { background: #f0b90b; color: #000; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="logo">💎 EthioP2P</div>
-    <div class="tagline">Trade Smart. Trade Secure. Trade Anytime.</div>
-</div>
-
 <div class="content">
 
-    <!-- HOME PAGE -->
-    <div class="page active" id="page-home">
-
-        <div class="balance-card">
-            <div class="balance-label">Total Balance</div>
-            <div class="balance-amount" id="balance-amount">100.00 USDT</div>
-            <div class="balance-sub">Escrow: <span id="escrow-amount">0.00 USDT</span></div>
+    <!-- P2P PAGE -->
+    <div class="page active" id="page-p2p">
+        <div class="topbar">
+            <div class="topbar-title">P2P Trading</div>
+            <div class="topbar-icon">📖</div>
         </div>
 
-        <div class="action-buttons">
-            <button class="action-btn btn-deposit" onclick="showPage('page-deposit')">
-                <span class="icon">💳</span>
-                Deposit
-            </button>
-            <button class="action-btn btn-withdraw" onclick="showPage('page-withdraw')">
-                <span class="icon">💸</span>
-                Withdraw
-            </button>
-            <button class="action-btn btn-buy" onclick="showPage('page-orders')">
-                <span class="icon">🟢</span>
-                Buy
-            </button>
-            <button class="action-btn btn-sell" onclick="showPage('page-sell')">
-                <span class="icon">🔴</span>
-                Sell
-            </button>
+        <div class="toggle-row">
+            <div class="toggle-btns">
+                <button class="toggle-btn active" id="btn-buy" onclick="switchMode('buy')">Buy</button>
+                <button class="toggle-btn" id="btn-sell-mode" onclick="switchMode('sell')">Sell</button>
+            </div>
+            <select class="currency-select" id="currency-select">
+                <option>ETB</option>
+                <option>USD</option>
+            </select>
         </div>
 
-        <div class="section-title">📊 Market Prices</div>
-        <div class="price-ticker">
-            <div>
-                <div class="price-pair">USDT/ETB</div>
-                <div class="price-change">▲ +0.5%</div>
+        <div class="filters">
+            <div class="filter-btn">
+                <span class="filter-icon">🟢</span> USDT
             </div>
-            <div class="price-value" id="usdt-price">155.00</div>
+            <div class="filter-btn">
+                Amount <span>▾</span>
+            </div>
+            <div class="filter-btn">
+                Payment Method <span>▾</span>
+            </div>
+            <div class="filter-btn">⚙️</div>
         </div>
 
-        <div class="section-title">📈 Your Stats</div>
-        <div class="stats-row">
-            <div class="stat-card">
-                <div class="stat-number" id="total-trades">0</div>
-                <div class="stat-label">Trades</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="total-rating">0.0⭐</div>
-                <div class="stat-label">Rating</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="total-volume">0</div>
-                <div class="stat-label">Volume</div>
-            </div>
-        </div>
+        <div id="merchants-list"></div>
 
+        <!-- FAB Button -->
+        <div style="position:fixed; bottom:80px; right:16px;">
+            <button onclick="showPage('page-create')"
+                style="width:52px; height:52px; border-radius:50%;
+                background:#f0b90b; border:none; font-size:24px;
+                cursor:pointer; box-shadow:0 4px 12px rgba(240,185,11,0.4);">
+                +
+            </button>
+        </div>
     </div>
 
     <!-- ORDERS PAGE -->
     <div class="page" id="page-orders">
-        <div class="section-title">📋 Open Orders</div>
-        <div id="orders-list">
-            <div class="order-card">
-                <div class="order-header">
-                    <span class="order-id">#001</span>
-                    <span class="order-status">🟢 Open</span>
-                </div>
-                <div class="order-amount">100 USDT</div>
-                <div class="order-details">
-                    <div class="order-detail">Price: <span>155 ETB</span></div>
-                    <div class="order-detail">Pay: <span>TeleBirr</span></div>
-                </div>
-                <button class="buy-btn">🟢 Buy This Order</button>
+        <div class="topbar">
+            <div class="topbar-title">Orders</div>
+            <div class="topbar-icon">🔍</div>
+        </div>
+        <div class="tab-row">
+            <div class="tab active" onclick="switchTab('processing', this)">Processing</div>
+            <div class="tab" onclick="switchTab('ended', this)">Ended</div>
+        </div>
+        <div class="subtab-row">
+            <div class="subtab active" onclick="switchSubtab('all', this)">All</div>
+            <div class="subtab" onclick="switchSubtab('unpaid', this)">Unpaid</div>
+            <div class="subtab" onclick="switchSubtab('paid', this)">Paid</div>
+            <div class="subtab" onclick="switchSubtab('appeal', this)">Appeal</div>
+            <div class="subtab-filter">⚙️</div>
+        </div>
+        <div id="orders-content">
+            <div class="empty-state">
+                <div class="empty-icon">📄</div>
+                <div class="empty-text">No data available</div>
             </div>
         </div>
     </div>
 
-    <!-- SELL PAGE -->
-    <div class="page" id="page-sell">
-        <div class="section-title">🔴 Create Sell Order</div>
-        <div style="margin: 0 16px;">
-            <div style="margin-bottom: 16px;">
-                <label style="color: #888; font-size: 12px;">Amount (USDT)</label>
-                <input type="number" id="sell-amount" placeholder="Enter amount"
-                    style="width:100%; padding:12px; background:#1a1a2e;
-                    border:1px solid #2a2a4a; border-radius:8px;
-                    color:#fff; font-size:16px; margin-top:6px;">
+    <!-- ACCOUNT PAGE -->
+    <div class="page" id="page-account">
+        <div class="topbar">
+            <div class="topbar-title">Account</div>
+        </div>
+        <div class="account-header">
+            <div class="account-avatar">👤</div>
+            <div>
+                <div class="account-name" id="acc-name">Loading...</div>
+                <div class="account-email" id="acc-email"></div>
+                <div class="account-badges">
+                    <div class="badge">✅ Verified</div>
+                    <div class="badge">✅ KYC</div>
+                </div>
+                <div style="font-size:11px; color:#888; margin-top:4px;">0 days since the first trade</div>
             </div>
-            <div style="margin-bottom: 16px;">
-                <label style="color: #888; font-size: 12px;">Price (ETB per USDT)</label>
-                <input type="number" id="sell-price" placeholder="Enter price"
-                    style="width:100%; padding:12px; background:#1a1a2e;
-                    border:1px solid #2a2a4a; border-radius:8px;
-                    color:#fff; font-size:16px; margin-top:6px;">
+        </div>
+        <div class="account-stats">
+            <div class="stat-row">
+                <div class="stat-label">30D Trades</div>
+                <div class="stat-value" id="acc-trades">0</div>
             </div>
-            <div style="margin-bottom: 16px;">
-                <label style="color: #888; font-size: 12px;">Payment Method</label>
-                <select id="sell-payment"
-                    style="width:100%; padding:12px; background:#1a1a2e;
-                    border:1px solid #2a2a4a; border-radius:8px;
-                    color:#fff; font-size:16px; margin-top:6px;">
+            <div class="stat-row">
+                <div class="stat-label">30D Completion Rate</div>
+                <div class="stat-value">0.00%</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Avg. Pay Time</div>
+                <div class="stat-value">00:00:00</div>
+            </div>
+        </div>
+        <div class="account-menu">
+            <div class="menu-item">
+                <div class="menu-label">Payment method</div>
+                <div class="menu-value">0 ›</div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-label">Blocked Users</div>
+                <div class="menu-value">0 ›</div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-label">Trade Counterparties</div>
+                <div class="menu-value">0 ›</div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-label">Appealed Orders</div>
+                <div class="menu-value">›</div>
+            </div>
+            <div class="menu-item">
+                <div class="menu-label">Merchant Application</div>
+                <div class="menu-value">›</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREATE ORDER PAGE -->
+    <div class="page" id="page-create">
+        <div class="topbar">
+            <div style="cursor:pointer;" onclick="showPage('page-p2p')">← Back</div>
+            <div class="topbar-title">Create Order</div>
+            <div></div>
+        </div>
+        <div class="form-section">
+            <div class="form-group">
+                <label class="form-label">Amount (USDT)</label>
+                <input type="number" class="form-input" id="create-amount" placeholder="Enter amount">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Price (ETB per USDT)</label>
+                <input type="number" class="form-input" id="create-price" placeholder="Enter price">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Min Limit (ETB)</label>
+                <input type="number" class="form-input" id="create-min" placeholder="e.g. 100">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Max Limit (ETB)</label>
+                <input type="number" class="form-input" id="create-max" placeholder="e.g. 10000">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Payment Method</label>
+                <select class="form-select" id="create-payment">
                     <option>TeleBirr</option>
                     <option>CBE Birr</option>
                     <option>Awash Bank</option>
@@ -392,95 +539,9 @@
                     <option>M-Pesa</option>
                 </select>
             </div>
-            <button onclick="submitSellOrder()"
-                style="width:100%; padding:16px;
-                background:linear-gradient(135deg,#ff4444,#cc0000);
-                color:white; border:none; border-radius:12px;
-                font-size:16px; font-weight:bold; cursor:pointer;">
-                🔴 Create Sell Order
+            <button class="submit-btn yellow" onclick="submitOrder()">
+                Post Sell Order
             </button>
-        </div>
-    </div>
-
-    <!-- DEPOSIT PAGE -->
-    <div class="page" id="page-deposit">
-        <div class="section-title">💳 Deposit</div>
-        <div style="margin: 0 16px;">
-            <div style="margin-bottom: 16px;">
-                <label style="color: #888; font-size: 12px;">Amount (USDT)</label>
-                <input type="number" id="deposit-amount" placeholder="Enter amount"
-                    style="width:100%; padding:12px; background:#1a1a2e;
-                    border:1px solid #2a2a4a; border-radius:8px;
-                    color:#fff; font-size:16px; margin-top:6px;">
-            </div>
-            <button onclick="submitDeposit()"
-                style="width:100%; padding:16px;
-                background:linear-gradient(135deg,#00d4ff,#0066ff);
-                color:white; border:none; border-radius:12px;
-                font-size:16px; font-weight:bold; cursor:pointer;">
-                💳 Deposit
-            </button>
-        </div>
-    </div>
-
-    <!-- WITHDRAW PAGE -->
-    <div class="page" id="page-withdraw">
-        <div class="section-title">💸 Withdraw</div>
-        <div style="margin: 0 16px;">
-            <div style="margin-bottom: 16px;">
-                <label style="color: #888; font-size: 12px;">Amount (USDT)</label>
-                <input type="number" id="withdraw-amount" placeholder="Enter amount"
-                    style="width:100%; padding:12px; background:#1a1a2e;
-                    border:1px solid #2a2a4a; border-radius:8px;
-                    color:#fff; font-size:16px; margin-top:6px;">
-            </div>
-            <button onclick="submitWithdraw()"
-                style="width:100%; padding:16px;
-                background:linear-gradient(135deg,#1a1a2e,#2a2a4a);
-                color:#00d4ff; border:1px solid #00d4ff44;
-                border-radius:12px; font-size:16px;
-                font-weight:bold; cursor:pointer;">
-                💸 Withdraw
-            </button>
-        </div>
-    </div>
-
-    <!-- HISTORY PAGE -->
-    <div class="page" id="page-history">
-        <div class="section-title">📜 Trade History</div>
-        <div id="history-list">
-            <div style="text-align:center; color:#888; padding:40px;">
-                No trades yet
-            </div>
-        </div>
-    </div>
-
-    <!-- PROFILE PAGE -->
-    <div class="page" id="page-profile">
-        <div class="section-title">👤 Profile</div>
-        <div style="margin: 0 16px;">
-            <div class="order-card">
-                <div style="text-align:center; padding:10px;">
-                    <div style="font-size:48px;">👤</div>
-                    <div style="font-size:20px; font-weight:bold; margin-top:8px;"
-                        id="profile-name">Loading...</div>
-                    <div style="color:#888; font-size:12px;" id="profile-id"></div>
-                </div>
-            </div>
-            <div class="stats-row" style="margin: 16px 0;">
-                <div class="stat-card">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Trades</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">5.0⭐</div>
-                    <div class="stat-label">Rating</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">0</div>
-                    <div class="stat-label">Disputes</div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -488,102 +549,197 @@
 
 <!-- BOTTOM NAV -->
 <div class="nav-bar">
-    <div class="nav-item active" onclick="showPage('page-home', this)">
-        <div class="nav-icon">🏠</div>
-        <div>Home</div>
+    <div class="nav-item active" id="nav-p2p" onclick="showPage('page-p2p', 'nav-p2p')">
+        <div class="nav-icon">👥</div>
+        <div>P2P</div>
     </div>
-    <div class="nav-item" onclick="showPage('page-orders', this)">
+    <div class="nav-item" id="nav-orders" onclick="showPage('page-orders', 'nav-orders')">
         <div class="nav-icon">📋</div>
         <div>Orders</div>
     </div>
-    <div class="nav-item" onclick="showPage('page-history', this)">
-        <div class="nav-icon">📜</div>
-        <div>History</div>
-    </div>
-    <div class="nav-item" onclick="showPage('page-profile', this)">
+    <div class="nav-item" id="nav-account" onclick="showPage('page-account', 'nav-account')">
         <div class="nav-icon">👤</div>
-        <div>Profile</div>
+        <div>Account</div>
     </div>
 </div>
 
 <script>
-    // Initialize Telegram Web App
     const tg = window.Telegram.WebApp;
     tg.expand();
-    tg.setHeaderColor('#0f0f1a');
-    tg.setBackgroundColor('#0f0f1a');
+    tg.setHeaderColor('#000000');
+    tg.setBackgroundColor('#000000');
 
-    // Get user info
     const user = tg.initDataUnsafe?.user;
     if (user) {
-        document.getElementById('profile-name').textContent = user.first_name;
-        document.getElementById('profile-id').textContent = `ID: ${user.id}`;
+        document.getElementById('acc-name').textContent = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+        document.getElementById('acc-email').textContent = '@' + (user.username || user.id);
     }
 
-    // Page navigation
-    function showPage(pageId, navItem) {
+    // Sample merchants data
+    const merchants = [
+        {
+            name: "EthioTrader🇪🇹",
+            badge: true,
+            online: true,
+            trades: 124,
+            rate: 99,
+            price: 155.50,
+            currency: "ETB",
+            limit_min: 500,
+            limit_max: 50000,
+            available: 1200,
+            timer: 15,
+            payments: ["TeleBirr", "CBE Birr", "Awash Bank"],
+            colors: ["#f0b90b", "#00d4a3", "#1652f0"]
+        },
+        {
+            name: "FastExchange⚡",
+            badge: false,
+            online: true,
+            trades: 56,
+            rate: 98,
+            price: 154.00,
+            currency: "ETB",
+            limit_min: 1000,
+            limit_max: 100000,
+            available: 5000,
+            timer: 15,
+            payments: ["Bank Transfer", "TeleBirr"],
+            colors: ["#1652f0", "#f0b90b"]
+        },
+        {
+            name: "CryptoMaster💎",
+            badge: true,
+            online: false,
+            trades: 312,
+            rate: 100,
+            price: 156.00,
+            currency: "ETB",
+            limit_min: 200,
+            limit_max: 20000,
+            available: 800,
+            timer: 30,
+            payments: ["M-Pesa", "CBE Birr"],
+            colors: ["#00d4a3", "#f0b90b"]
+        }
+    ];
+
+    let currentMode = 'buy';
+
+    function renderMerchants() {
+        const list = document.getElementById('merchants-list');
+        list.innerHTML = merchants.map((m, i) => `
+            <div class="merchant-card">
+                <div class="merchant-header">
+                    <div class="merchant-avatar">
+                        ${m.name[0]}
+                        ${m.online ? '<div class="online-dot"></div>' : ''}
+                    </div>
+                    <div class="merchant-info">
+                        <div class="merchant-name">
+                            ${m.name}
+                            ${m.badge ? '<span class="merchant-badge">★</span>' : ''}
+                        </div>
+                        <div class="merchant-stats">Trades ${m.trades} (${m.rate}%)</div>
+                    </div>
+                </div>
+                <div class="merchant-body">
+                    <div>
+                        <div class="merchant-price"><span>$</span>${m.price.toFixed(3)}</div>
+                        <div class="merchant-details">
+                            Limit <b>${m.currency} ${m.limit_min.toLocaleString()} - ${m.limit_max.toLocaleString()}</b>
+                        </div>
+                        <div class="merchant-details">
+                            Available <b>${m.available.toLocaleString()} USDT</b>
+                        </div>
+                        <div class="merchant-timer">⏱ ${m.timer} minutes</div>
+                        <div class="payment-tags">
+                            ${m.payments.map((p, j) => `
+                                <span class="payment-tag" style="border-color:${m.colors[j] || '#888'}">
+                                    ${p}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <button class="buy-action-btn ${currentMode}"
+                        onclick="selectMerchant(${i})">
+                        ${currentMode === 'buy' ? 'Buy' : 'Sell'}
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function switchMode(mode) {
+        currentMode = mode;
+        document.getElementById('btn-buy').classList.toggle('active', mode === 'buy');
+        document.getElementById('btn-sell-mode').classList.toggle('active', mode === 'sell');
+        renderMerchants();
+    }
+
+    function selectMerchant(i) {
+        const m = merchants[i];
+        tg.showConfirm(
+            `${currentMode === 'buy' ? 'Buy' : 'Sell'} USDT from ${m.name}\nPrice: ${m.price} ETB\nLimit: ${m.limit_min} - ${m.limit_max} ETB`,
+            (confirmed) => {
+                if (confirmed) {
+                    tg.sendData(JSON.stringify({
+                        action: currentMode,
+                        merchant: m.name,
+                        price: m.price
+                    }));
+                }
+            }
+        );
+    }
+
+    function showPage(pageId, navId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
-
-        if (navItem) {
+        if (navId) {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            navItem.classList.add('active');
+            document.getElementById(navId).classList.add('active');
         }
     }
 
-    // Submit sell order
-    function submitSellOrder() {
-        const amount = document.getElementById('sell-amount').value;
-        const price = document.getElementById('sell-price').value;
-        const payment = document.getElementById('sell-payment').value;
+    function switchTab(tab, el) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    function switchSubtab(tab, el) {
+        document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    function submitOrder() {
+        const amount = document.getElementById('create-amount').value;
+        const price = document.getElementById('create-price').value;
+        const min = document.getElementById('create-min').value;
+        const max = document.getElementById('create-max').value;
+        const payment = document.getElementById('create-payment').value;
 
         if (!amount || !price) {
-            tg.showAlert('Please fill all fields!');
+            tg.showAlert('Please fill amount and price!');
             return;
         }
 
         tg.sendData(JSON.stringify({
             action: 'sell',
-            amount: amount,
-            price: price,
-            payment: payment
+            amount, price, min, max, payment
         }));
     }
 
-    // Submit deposit
-    function submitDeposit() {
-        const amount = document.getElementById('deposit-amount').value;
-        if (!amount) {
-            tg.showAlert('Please enter amount!');
-            return;
-        }
-        tg.sendData(JSON.stringify({
-            action: 'deposit',
-            amount: amount
-        }));
+    // Live price update
+    function updatePrices() {
+        merchants.forEach(m => {
+            m.price = parseFloat((m.price + (Math.random() * 0.4 - 0.2)).toFixed(3));
+        });
+        renderMerchants();
     }
 
-    // Submit withdraw
-    function submitWithdraw() {
-        const amount = document.getElementById('withdraw-amount').value;
-        if (!amount) {
-            tg.showAlert('Please enter amount!');
-            return;
-        }
-        tg.sendData(JSON.stringify({
-            action: 'withdraw',
-            amount: amount
-        }));
-    }
-
-    // Live price simulation
-    function updatePrice() {
-        const base = 155;
-        const random = (Math.random() * 4 - 2).toFixed(2);
-        const price = (base + parseFloat(random)).toFixed(2);
-        document.getElementById('usdt-price').textContent = price;
-    }
-    setInterval(updatePrice, 3000);
+    renderMerchants();
+    setInterval(updatePrices, 5000);
 </script>
 
 </body>
